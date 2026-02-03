@@ -1,4 +1,4 @@
-package es.unir.dwfs.ms_books_catalogue;
+package es.unir.dwfs;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

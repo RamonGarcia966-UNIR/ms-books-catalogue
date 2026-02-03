@@ -1,4 +1,4 @@
-package es.unir.dwfs.ms_books_catalogue;
+package es.unir.dwfs;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
