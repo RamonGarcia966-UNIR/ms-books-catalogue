@@ -26,15 +26,16 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Books Controller", description = "API para gestión del catálogo de libros")
+@Tag(name = "Books Controller", description = "API REST para gestión del catálogo de libros. Incluye operaciones CRUD completas con manejo robusto de errores (409 Conflict para violaciones de integridad, 500 para errores del servidor)")
+
 public class BooksController {
 
     private final BooksService service;
 
     @GetMapping("/books")
-    @Operation(summary = "Obtener libros", description = "Obtiene todos los libros o filtra por criterios de búsqueda combinados", responses = {
-            @ApiResponse(responseCode = "200", description = "Libros encontrados"),
-            @ApiResponse(responseCode = "204", description = "No se encontraron libros")
+    @Operation(summary = "Obtener libros", description = "Obtiene todos los libros del catálogo o filtra por criterios de búsqueda combinados (título, autor, categoría, ISBN, rating, precio, visibilidad)", responses = {
+            @ApiResponse(responseCode = "200", description = "OK - Libros encontrados y devueltos exitosamente"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error - Error inesperado del servidor")
     })
     public ResponseEntity<List<Book>> getBooks(
             @RequestHeader Map<String, String> headers,
@@ -61,9 +62,10 @@ public class BooksController {
     }
 
     @GetMapping("/books/{bookId}")
-    @Operation(summary = "Obtener libro por ID", description = "Obtiene un libro específico por su identificador", responses = {
-            @ApiResponse(responseCode = "200", description = "Libro encontrado"),
-            @ApiResponse(responseCode = "404", description = "Libro no encontrado")
+    @Operation(summary = "Obtener libro por ID", description = "Obtiene un libro específico del catálogo mediante su identificador único", responses = {
+            @ApiResponse(responseCode = "200", description = "OK - Libro encontrado y devuelto exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Not Found - No existe un libro con el ID especificado"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error - Error inesperado del servidor")
     })
     public ResponseEntity<Book> getBook(@PathVariable String bookId) {
 
@@ -79,9 +81,10 @@ public class BooksController {
     }
 
     @DeleteMapping("/books/{bookId}")
-    @Operation(summary = "Eliminar libro", description = "Elimina un libro del catálogo", responses = {
-            @ApiResponse(responseCode = "200", description = "Libro eliminado correctamente"),
-            @ApiResponse(responseCode = "404", description = "Libro no encontrado")
+    @Operation(summary = "Eliminar libro", description = "Elimina un libro del catálogo mediante su identificador único", responses = {
+            @ApiResponse(responseCode = "200", description = "OK - Libro eliminado correctamente"),
+            @ApiResponse(responseCode = "404", description = "Not Found - No existe un libro con el ID especificado"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error - Error inesperado del servidor")
     })
     public ResponseEntity<Void> deleteBook(@PathVariable String bookId) {
 
@@ -97,9 +100,11 @@ public class BooksController {
     }
 
     @PostMapping("/books")
-    @Operation(summary = "Crear libro", description = "Crea un nuevo libro en el catálogo", responses = {
-            @ApiResponse(responseCode = "201", description = "Libro creado correctamente"),
-            @ApiResponse(responseCode = "400", description = "Datos inválidos")
+    @Operation(summary = "Crear libro", description = "Crea un nuevo libro en el catálogo. Campos obligatorios: título, autor, precio y visibilidad", responses = {
+            @ApiResponse(responseCode = "201", description = "Created - Libro creado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Bad Request - Datos inválidos o faltan campos obligatorios"),
+            @ApiResponse(responseCode = "409", description = "Conflict - El ISBN ya existe en el sistema o violación de restricción de integridad"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error - Error inesperado del servidor")
     })
     public ResponseEntity<Book> addBook(@RequestBody CreateBookRequest request) {
 
@@ -115,10 +120,12 @@ public class BooksController {
     }
 
     @PatchMapping("/books/{bookId}")
-    @Operation(summary = "Actualizar libro parcialmente (PATCH)", description = "Actualiza parcialmente un libro usando JSON Merge Patch (RFC 7386)", responses = {
-            @ApiResponse(responseCode = "200", description = "Libro actualizado correctamente"),
-            @ApiResponse(responseCode = "400", description = "Error en el patch"),
-            @ApiResponse(responseCode = "404", description = "Libro no encontrado")
+    @Operation(summary = "Actualizar libro parcialmente (PATCH)", description = "Actualiza parcialmente un libro existente usando JSON Merge Patch (RFC 7386). Solo se modifican los campos especificados en el cuerpo de la petición", responses = {
+            @ApiResponse(responseCode = "200", description = "OK - Libro actualizado correctamente"),
+            @ApiResponse(responseCode = "400", description = "Bad Request - Error en el formato del patch o datos inválidos"),
+            @ApiResponse(responseCode = "404", description = "Not Found - No existe un libro con el ID especificado"),
+            @ApiResponse(responseCode = "409", description = "Conflict - El ISBN modificado ya existe o violación de restricción de integridad"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error - Error inesperado del servidor")
     })
     public ResponseEntity<Book> patchBook(@PathVariable String bookId, @RequestBody String patchBody) {
 
@@ -134,9 +141,12 @@ public class BooksController {
     }
 
     @PutMapping("/books/{bookId}")
-    @Operation(summary = "Actualizar libro completamente (PUT)", description = "Actualiza todos los campos de un libro", responses = {
-            @ApiResponse(responseCode = "200", description = "Libro actualizado correctamente"),
-            @ApiResponse(responseCode = "404", description = "Libro no encontrado")
+    @Operation(summary = "Actualizar libro completamente (PUT)", description = "Actualiza todos los campos de un libro existente. Se deben proporcionar todos los campos del libro", responses = {
+            @ApiResponse(responseCode = "200", description = "OK - Libro actualizado correctamente"),
+            @ApiResponse(responseCode = "400", description = "Bad Request - Datos inválidos o faltan campos obligatorios"),
+            @ApiResponse(responseCode = "404", description = "Not Found - No existe un libro con el ID especificado"),
+            @ApiResponse(responseCode = "409", description = "Conflict - El ISBN modificado ya existe o violación de restricción de integridad"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error - Error inesperado del servidor")
     })
     public ResponseEntity<Book> updateBook(@PathVariable String bookId, @RequestBody BookDto body) {
 
