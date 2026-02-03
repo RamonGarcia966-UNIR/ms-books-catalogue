@@ -95,8 +95,7 @@ public class BooksServiceImpl implements BooksService {
                 JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(patchBody));
                 JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(book)));
                 Book patched = objectMapper.treeToValue(target, Book.class);
-                repository.save(patched);
-                return patched;
+                return repository.save(patched);
             } catch (JsonProcessingException | JsonPatchException e) {
                 log.error("Error updating book {}", bookId, e);
                 return null;
@@ -111,10 +110,10 @@ public class BooksServiceImpl implements BooksService {
         Book book = repository.getById(Long.valueOf(bookId));
         if (book != null) {
             book.update(updateRequest);
-            repository.save(book);
-            return book;
+            return repository.save(book);
         } else {
             return null;
         }
     }
+
 }

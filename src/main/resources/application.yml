@@ -15,6 +15,11 @@ spring:
       path: /h2-console
       settings:
         web-allow-others: true
+  web:
+    error:
+      include-stacktrace: never
+      include-message: always
+      include-binding-errors: always
 
 ## Configuración de Instancia
 server:
