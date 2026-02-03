@@ -4,6 +4,7 @@ import es.unir.dwfs.catalogue.data.model.Book;
 import es.unir.dwfs.catalogue.data.utils.SearchCriteria;
 import es.unir.dwfs.catalogue.data.utils.SearchOperation;
 import es.unir.dwfs.catalogue.data.utils.SearchStatement;
+import org.springframework.data.jpa.domain.Specification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -87,82 +88,23 @@ public class BookRepository {
                 : null;
 
         // Combinar especificaciones
-        SearchStatement combinedSpec = titleSpec;
+        Specification<Book> combinedSpec = Specification.where(titleSpec);
 
-        if (combinedSpec != null) {
-            if (authorSpec != null)
-                combinedSpec = (SearchStatement) combinedSpec.and(authorSpec);
-            if (publicationDateSpec != null)
-                combinedSpec = (SearchStatement) combinedSpec.and(publicationDateSpec);
-            if (categorySpec != null)
-                combinedSpec = (SearchStatement) combinedSpec.and(categorySpec);
-            if (isbnSpec != null)
-                combinedSpec = (SearchStatement) combinedSpec.and(isbnSpec);
-            if (ratingSpec != null)
-                combinedSpec = (SearchStatement) combinedSpec.and(ratingSpec);
-            if (priceSpec != null)
-                combinedSpec = (SearchStatement) combinedSpec.and(priceSpec);
-            if (visibleSpec != null)
-                combinedSpec = (SearchStatement) combinedSpec.and(visibleSpec);
-        } else {
-            if (authorSpec != null) {
-                combinedSpec = authorSpec;
-                if (publicationDateSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(publicationDateSpec);
-                if (categorySpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(categorySpec);
-                if (isbnSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(isbnSpec);
-                if (ratingSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(ratingSpec);
-                if (priceSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(priceSpec);
-                if (visibleSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(visibleSpec);
-            } else if (publicationDateSpec != null) {
-                combinedSpec = publicationDateSpec;
-                if (categorySpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(categorySpec);
-                if (isbnSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(isbnSpec);
-                if (ratingSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(ratingSpec);
-                if (priceSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(priceSpec);
-                if (visibleSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(visibleSpec);
-            } else if (categorySpec != null) {
-                combinedSpec = categorySpec;
-                if (isbnSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(isbnSpec);
-                if (ratingSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(ratingSpec);
-                if (priceSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(priceSpec);
-                if (visibleSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(visibleSpec);
-            } else if (isbnSpec != null) {
-                combinedSpec = isbnSpec;
-                if (ratingSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(ratingSpec);
-                if (priceSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(priceSpec);
-                if (visibleSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(visibleSpec);
-            } else if (ratingSpec != null) {
-                combinedSpec = ratingSpec;
-                if (priceSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(priceSpec);
-                if (visibleSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(visibleSpec);
-            } else if (priceSpec != null) {
-                combinedSpec = priceSpec;
-                if (visibleSpec != null)
-                    combinedSpec = (SearchStatement) combinedSpec.and(visibleSpec);
-            } else {
-                combinedSpec = visibleSpec;
-            }
-        }
+        if (authorSpec != null)
+            combinedSpec = combinedSpec == null ? Specification.where(authorSpec) : combinedSpec.and(authorSpec);
+        if (publicationDateSpec != null)
+            combinedSpec = combinedSpec == null ? Specification.where(publicationDateSpec)
+                    : combinedSpec.and(publicationDateSpec);
+        if (categorySpec != null)
+            combinedSpec = combinedSpec == null ? Specification.where(categorySpec) : combinedSpec.and(categorySpec);
+        if (isbnSpec != null)
+            combinedSpec = combinedSpec == null ? Specification.where(isbnSpec) : combinedSpec.and(isbnSpec);
+        if (ratingSpec != null)
+            combinedSpec = combinedSpec == null ? Specification.where(ratingSpec) : combinedSpec.and(ratingSpec);
+        if (priceSpec != null)
+            combinedSpec = combinedSpec == null ? Specification.where(priceSpec) : combinedSpec.and(priceSpec);
+        if (visibleSpec != null)
+            combinedSpec = combinedSpec == null ? Specification.where(visibleSpec) : combinedSpec.and(visibleSpec);
 
         if (combinedSpec != null) {
             return repository.findAll(combinedSpec);
