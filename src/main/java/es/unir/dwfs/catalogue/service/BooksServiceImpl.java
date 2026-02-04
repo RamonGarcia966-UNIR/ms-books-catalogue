@@ -49,14 +49,14 @@ public class BooksServiceImpl implements BooksService {
     }
 
     @Override
-    public Boolean removeBook(String bookId) {
+    public boolean removeBook(String bookId) {
         Book book = repository.getById(Long.valueOf(bookId));
 
         if (book != null) {
             repository.delete(book);
-            return Boolean.TRUE;
+            return true;
         } else {
-            return Boolean.FALSE;
+            return false;
         }
     }
 

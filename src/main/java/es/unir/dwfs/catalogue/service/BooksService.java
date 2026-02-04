@@ -18,7 +18,7 @@ public interface BooksService {
 
     Book getBook(String bookId);
 
-    Boolean removeBook(String bookId);
+    boolean removeBook(String bookId);
 
     Book createBook(CreateBookRequest request);
 

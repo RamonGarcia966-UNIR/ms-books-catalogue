@@ -91,7 +91,7 @@ public class BooksController {
 
         log.info("Request to delete book with id: {}", bookId);
 
-        Boolean removed = service.removeBook(bookId);
+        boolean removed = service.removeBook(bookId);
 
         if (removed) {
             return ResponseEntity.ok().build();
