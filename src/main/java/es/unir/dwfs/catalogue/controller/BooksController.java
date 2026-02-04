@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -106,7 +107,7 @@ public class BooksController {
             @ApiResponse(responseCode = "409", description = "Conflict - El ISBN ya existe en el sistema o violación de restricción de integridad"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Error inesperado del servidor")
     })
-    public ResponseEntity<Book> addBook(@RequestBody CreateBookRequest request) {
+    public ResponseEntity<Book> addBook(@Valid @RequestBody CreateBookRequest request) {
 
         log.info("Request to create book: {}", request);
 

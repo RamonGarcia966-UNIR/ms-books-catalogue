@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Clase DTO para representar respuestas de error consistentes en la API
@@ -42,4 +43,33 @@ public class ErrorResponse {
      * Ruta de la petición
      */
     private String path;
+
+    /**
+     * Detalles de los errores de validación
+     */
+    private List<ErrorDetail> details;
+
+    /**
+     * Clase interna para representar detalles de errores de validación
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class ErrorDetail {
+        /**
+         * Campo que falló la validación
+         */
+        private String element;
+
+        /**
+         * Código del error
+         */
+        private String code;
+
+        /**
+         * Descripción legible del error
+         */
+        private String description;
+    }
 }
