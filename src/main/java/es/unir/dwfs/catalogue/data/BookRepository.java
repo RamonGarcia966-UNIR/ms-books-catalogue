@@ -87,8 +87,8 @@ public class BookRepository {
                 ? new SearchStatement(new SearchCriteria("visible", visible, SearchOperation.EQUAL))
                 : null;
 
-        // Combinar especificaciones
-        Specification<Book> combinedSpec = Specification.where(titleSpec);
+        // Inicializar especificación combinada
+        Specification<Book> combinedSpec = titleSpec != null ? Specification.where(titleSpec) : null;
 
         if (authorSpec != null)
             combinedSpec = combinedSpec == null ? Specification.where(authorSpec) : combinedSpec.and(authorSpec);
