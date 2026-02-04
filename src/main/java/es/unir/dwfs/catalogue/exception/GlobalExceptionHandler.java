@@ -200,15 +200,15 @@ public class GlobalExceptionHandler {
         }
         // Detectar violación de clave primaria
         else if (exceptionMessage.contains("primary key") || exceptionMessage.contains("clave primaria")) {
-            errorMessage = "Ya existe un registro con el mismo identificador";
+            errorMessage = converterErrors.getMessage("GENERIC-001");
         }
         // Detectar violación de NOT NULL
         else if (exceptionMessage.contains("not null") || exceptionMessage.contains("null")) {
-            errorMessage = "Faltan campos obligatorios";
+            errorMessage = converterErrors.getMessage("GENERIC-002");
         }
         // Violación genérica de integridad
         else {
-            errorMessage = "Error de integridad de datos";
+            errorMessage = converterErrors.getMessage("GENERIC-003");
         }
 
         ErrorResponse errorResponse = ErrorResponse.builder()
@@ -258,7 +258,7 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-                .message("Ha ocurrido un error inesperado. Por favor, contacte al administrador.")
+                .message(converterErrors.getMessage("GENERIC-004"))
                 .path(request.getDescription(false).replace("uri=", ""))
                 .build();
 
