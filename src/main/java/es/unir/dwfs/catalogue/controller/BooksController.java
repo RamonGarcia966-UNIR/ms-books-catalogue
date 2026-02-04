@@ -329,7 +329,7 @@ public class BooksController {
                     - **GENERIC-004**: Ha ocurrido un error inesperado. Por favor, contacte al administrador
                     """)
     })
-    public ResponseEntity<?> updateBook(@PathVariable String bookId, @RequestBody BookDto body,
+    public ResponseEntity<?> updateBook(@PathVariable String bookId, @Valid @RequestBody BookDto body,
             HttpServletRequest request) {
 
         log.info("Request to update book with id: {}", bookId);
