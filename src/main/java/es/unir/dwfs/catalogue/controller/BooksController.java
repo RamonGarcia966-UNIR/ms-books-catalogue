@@ -36,7 +36,11 @@ public class BooksController {
     @GetMapping("/books")
     @Operation(summary = "Obtener libros", description = "Obtiene todos los libros del catálogo o filtra por criterios de búsqueda combinados (título, autor, categoría, ISBN, rating, precio, visibilidad)", responses = {
             @ApiResponse(responseCode = "200", description = "OK - Libros encontrados y devueltos exitosamente"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Error inesperado del servidor")
+            @ApiResponse(responseCode = "500", description = """
+                    Internal Server Error - Error inesperado del servidor:
+
+                    - **GENERIC-004**: Ha ocurrido un error inesperado. Por favor, contacte al administrador
+                    """)
     })
     public ResponseEntity<List<Book>> getBooks(
             @RequestHeader Map<String, String> headers,
@@ -66,7 +70,11 @@ public class BooksController {
     @Operation(summary = "Obtener libro por ID", description = "Obtiene un libro específico del catálogo mediante su identificador único", responses = {
             @ApiResponse(responseCode = "200", description = "OK - Libro encontrado y devuelto exitosamente"),
             @ApiResponse(responseCode = "404", description = "Not Found - No existe un libro con el ID especificado"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Error inesperado del servidor")
+            @ApiResponse(responseCode = "500", description = """
+                    Internal Server Error - Error inesperado del servidor:
+
+                    - **GENERIC-004**: Ha ocurrido un error inesperado. Por favor, contacte al administrador
+                    """)
     })
     public ResponseEntity<Book> getBook(@PathVariable String bookId) {
 
@@ -85,7 +93,11 @@ public class BooksController {
     @Operation(summary = "Eliminar libro", description = "Elimina un libro del catálogo mediante su identificador único", responses = {
             @ApiResponse(responseCode = "200", description = "OK - Libro eliminado correctamente"),
             @ApiResponse(responseCode = "404", description = "Not Found - No existe un libro con el ID especificado"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Error inesperado del servidor")
+            @ApiResponse(responseCode = "500", description = """
+                    Internal Server Error - Error inesperado del servidor:
+
+                    - **GENERIC-004**: Ha ocurrido un error inesperado. Por favor, contacte al administrador
+                    """)
     })
     public ResponseEntity<Void> deleteBook(@PathVariable String bookId) {
 
@@ -101,11 +113,58 @@ public class BooksController {
     }
 
     @PostMapping("/books")
-    @Operation(summary = "Crear libro", description = "Crea un nuevo libro en el catálogo. Campos obligatorios: título, autor, precio y visibilidad", responses = {
+    @Operation(summary = "Crear libro", description = "Crea un nuevo libro en el catálogo", responses = {
             @ApiResponse(responseCode = "201", description = "Created - Libro creado exitosamente"),
-            @ApiResponse(responseCode = "400", description = "Bad Request - Datos inválidos o faltan campos obligatorios"),
-            @ApiResponse(responseCode = "409", description = "Conflict - El ISBN ya existe en el sistema o violación de restricción de integridad"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Error inesperado del servidor")
+            @ApiResponse(responseCode = "400", description = """
+                    Bad Request - La petición contiene errores de formato, sintaxis o validación de datos que impiden su procesamiento. Los errores por validación de datos vienen detallados en el atributo 'details' de la respuesta y pueden ser:
+
+                    **Campo 'title':**
+                    - **BOOK-001**: El parámetro 'title' es obligatorio y no puede estar vacío
+                    - **BOOK-002**: El parámetro 'title' ha superado el tamaño máximo permitido (max: 200 caracteres)
+                    - **BOOK-003**: El parámetro 'title' tiene un formato no válido
+
+                    **Campo 'author':**
+                    - **BOOK-010**: El parámetro 'author' es obligatorio y no puede estar vacío
+                    - **BOOK-011**: El parámetro 'author' ha superado el tamaño máximo permitido (max: 150 caracteres)
+                    - **BOOK-012**: El parámetro 'author' tiene un formato no válido
+
+                    **Campo 'isbn':**
+                    - **BOOK-020**: El parámetro 'isbn' ha superado el tamaño máximo permitido (max: 20 caracteres)
+                    - **BOOK-021**: El parámetro 'isbn' tiene un formato no válido
+
+                    **Campo 'category':**
+                    - **BOOK-030**: El parámetro 'category' ha superado el tamaño máximo permitido (max: 100 caracteres)
+                    - **BOOK-031**: El parámetro 'category' tiene un formato no válido
+
+                    **Campo 'price':**
+                    - **BOOK-040**: El parámetro 'price' es obligatorio y no puede estar vacío
+                    - **BOOK-041**: El parámetro 'price' debe ser mayor o igual a 0
+                    - **BOOK-042**: El parámetro 'price' debe tener como máximo 2 decimales
+
+                    **Campo 'visible':**
+                    - **BOOK-060**: El parámetro 'visible' es obligatorio y no puede estar vacío
+
+                    **Campo 'publicationDate':**
+                    - **BOOK-070**: El parámetro 'publicationDate' es obligatorio y no puede estar vacío
+                    - **BOOK-071**: El parámetro 'publicationDate' tiene un formato no válido
+                    - **BOOK-072**: El parámetro 'publicationDate' no puede ser una fecha futura
+                    """),
+            @ApiResponse(responseCode = "409", description = """
+                    Conflict - Violación de restricción de integridad de datos. Los errores pueden ser:
+
+                    **Campo 'isbn':**
+                    - **BOOK-022**: El parámetro 'isbn' ya existe en el sistema
+
+                    **Errores genéricos:**
+                    - **GENERIC-001**: Ya existe un registro con el mismo identificador
+                    - **GENERIC-002**: Faltan campos obligatorios
+                    - **GENERIC-003**: Error de integridad de datos
+                    """),
+            @ApiResponse(responseCode = "500", description = """
+                    Internal Server Error - Error inesperado del servidor:
+
+                    - **GENERIC-004**: Ha ocurrido un error inesperado. Por favor, contacte al administrador
+                    """)
     })
     public ResponseEntity<Book> addBook(@Valid @RequestBody CreateBookRequest request) {
 
@@ -121,12 +180,59 @@ public class BooksController {
     }
 
     @PatchMapping("/books/{bookId}")
-    @Operation(summary = "Actualizar libro parcialmente (PATCH)", description = "Actualiza parcialmente un libro existente usando JSON Merge Patch (RFC 7386). Solo se modifican los campos especificados en el cuerpo de la petición", responses = {
+    @Operation(summary = "Actualizar libro parcialmente (PATCH)", description = "Actualiza parcialmente un libro existente usando JSON Merge Patch (RFC 7386)", responses = {
             @ApiResponse(responseCode = "200", description = "OK - Libro actualizado correctamente"),
-            @ApiResponse(responseCode = "400", description = "Bad Request - Error en el formato del patch o datos inválidos"),
+            @ApiResponse(responseCode = "400", description = """
+                    Bad Request - La petición contiene errores de formato, sintaxis o validación de datos que impiden su procesamiento. Los errores por validación de datos vienen detallados en el atributo 'details' de la respuesta y pueden ser:
+
+                    **Campo 'title':**
+                    - **BOOK-001**: El parámetro 'title' es obligatorio y no puede estar vacío
+                    - **BOOK-002**: El parámetro 'title' ha superado el tamaño máximo permitido (max: 200 caracteres)
+                    - **BOOK-003**: El parámetro 'title' tiene un formato no válido
+
+                    **Campo 'author':**
+                    - **BOOK-010**: El parámetro 'author' es obligatorio y no puede estar vacío
+                    - **BOOK-011**: El parámetro 'author' ha superado el tamaño máximo permitido (max: 150 caracteres)
+                    - **BOOK-012**: El parámetro 'author' tiene un formato no válido
+
+                    **Campo 'isbn':**
+                    - **BOOK-020**: El parámetro 'isbn' ha superado el tamaño máximo permitido (max: 20 caracteres)
+                    - **BOOK-021**: El parámetro 'isbn' tiene un formato no válido
+
+                    **Campo 'category':**
+                    - **BOOK-030**: El parámetro 'category' ha superado el tamaño máximo permitido (max: 100 caracteres)
+                    - **BOOK-031**: El parámetro 'category' tiene un formato no válido
+
+                    **Campo 'price':**
+                    - **BOOK-040**: El parámetro 'price' es obligatorio y no puede estar vacío
+                    - **BOOK-041**: El parámetro 'price' debe ser mayor o igual a 0
+                    - **BOOK-042**: El parámetro 'price' debe tener como máximo 2 decimales
+
+                    **Campo 'visible':**
+                    - **BOOK-060**: El parámetro 'visible' es obligatorio y no puede estar vacío
+
+                    **Campo 'publicationDate':**
+                    - **BOOK-070**: El parámetro 'publicationDate' es obligatorio y no puede estar vacío
+                    - **BOOK-071**: El parámetro 'publicationDate' tiene un formato no válido
+                    - **BOOK-072**: El parámetro 'publicationDate' no puede ser una fecha futura
+                    """),
             @ApiResponse(responseCode = "404", description = "Not Found - No existe un libro con el ID especificado"),
-            @ApiResponse(responseCode = "409", description = "Conflict - El ISBN modificado ya existe o violación de restricción de integridad"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Error inesperado del servidor")
+            @ApiResponse(responseCode = "409", description = """
+                    Conflict - Violación de restricción de integridad de datos. Los errores pueden ser:
+
+                    **Campo 'isbn':**
+                    - **BOOK-022**: El parámetro 'isbn' ya existe en el sistema
+
+                    **Errores genéricos:**
+                    - **GENERIC-001**: Ya existe un registro con el mismo identificador
+                    - **GENERIC-002**: Faltan campos obligatorios
+                    - **GENERIC-003**: Error de integridad de datos
+                    """),
+            @ApiResponse(responseCode = "500", description = """
+                    Internal Server Error - Error inesperado del servidor:
+
+                    - **GENERIC-004**: Ha ocurrido un error inesperado. Por favor, contacte al administrador
+                    """)
     })
     public ResponseEntity<Book> patchBook(@PathVariable String bookId, @RequestBody String patchBody) {
 
@@ -142,12 +248,59 @@ public class BooksController {
     }
 
     @PutMapping("/books/{bookId}")
-    @Operation(summary = "Actualizar libro completamente (PUT)", description = "Actualiza todos los campos de un libro existente. Se deben proporcionar todos los campos del libro", responses = {
+    @Operation(summary = "Actualizar libro completamente (PUT)", description = "Actualiza todos los campos de un libro existente", responses = {
             @ApiResponse(responseCode = "200", description = "OK - Libro actualizado correctamente"),
-            @ApiResponse(responseCode = "400", description = "Bad Request - Datos inválidos o faltan campos obligatorios"),
+            @ApiResponse(responseCode = "400", description = """
+                    Bad Request - La petición contiene errores de formato, sintaxis o validación de datos que impiden su procesamiento. Los errores por validación de datos vienen detallados en el atributo 'details' de la respuesta y pueden ser:
+
+                    **Campo 'title':**
+                    - **BOOK-001**: El parámetro 'title' es obligatorio y no puede estar vacío
+                    - **BOOK-002**: El parámetro 'title' ha superado el tamaño máximo permitido (max: 200 caracteres)
+                    - **BOOK-003**: El parámetro 'title' tiene un formato no válido
+
+                    **Campo 'author':**
+                    - **BOOK-010**: El parámetro 'author' es obligatorio y no puede estar vacío
+                    - **BOOK-011**: El parámetro 'author' ha superado el tamaño máximo permitido (max: 150 caracteres)
+                    - **BOOK-012**: El parámetro 'author' tiene un formato no válido
+
+                    **Campo 'isbn':**
+                    - **BOOK-020**: El parámetro 'isbn' ha superado el tamaño máximo permitido (max: 20 caracteres)
+                    - **BOOK-021**: El parámetro 'isbn' tiene un formato no válido
+
+                    **Campo 'category':**
+                    - **BOOK-030**: El parámetro 'category' ha superado el tamaño máximo permitido (max: 100 caracteres)
+                    - **BOOK-031**: El parámetro 'category' tiene un formato no válido
+
+                    **Campo 'price':**
+                    - **BOOK-040**: El parámetro 'price' es obligatorio y no puede estar vacío
+                    - **BOOK-041**: El parámetro 'price' debe ser mayor o igual a 0
+                    - **BOOK-042**: El parámetro 'price' debe tener como máximo 2 decimales
+
+                    **Campo 'visible':**
+                    - **BOOK-060**: El parámetro 'visible' es obligatorio y no puede estar vacío
+
+                    **Campo 'publicationDate':**
+                    - **BOOK-070**: El parámetro 'publicationDate' es obligatorio y no puede estar vacío
+                    - **BOOK-071**: El parámetro 'publicationDate' tiene un formato no válido
+                    - **BOOK-072**: El parámetro 'publicationDate' no puede ser una fecha futura
+                    """),
             @ApiResponse(responseCode = "404", description = "Not Found - No existe un libro con el ID especificado"),
-            @ApiResponse(responseCode = "409", description = "Conflict - El ISBN modificado ya existe o violación de restricción de integridad"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Error inesperado del servidor")
+            @ApiResponse(responseCode = "409", description = """
+                    Conflict - Violación de restricción de integridad de datos. Los errores pueden ser:
+
+                    **Campo 'isbn':**
+                    - **BOOK-022**: El parámetro 'isbn' ya existe en el sistema
+
+                    **Errores genéricos:**
+                    - **GENERIC-001**: Ya existe un registro con el mismo identificador
+                    - **GENERIC-002**: Faltan campos obligatorios
+                    - **GENERIC-003**: Error de integridad de datos
+                    """),
+            @ApiResponse(responseCode = "500", description = """
+                    Internal Server Error - Error inesperado del servidor:
+
+                    - **GENERIC-004**: Ha ocurrido un error inesperado. Por favor, contacte al administrador
+                    """)
     })
     public ResponseEntity<Book> updateBook(@PathVariable String bookId, @RequestBody BookDto body) {
 
