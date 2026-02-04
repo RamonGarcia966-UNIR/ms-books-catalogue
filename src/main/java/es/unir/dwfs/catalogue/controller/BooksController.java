@@ -180,7 +180,7 @@ public class BooksController {
     }
 
     @PatchMapping("/books/{bookId}")
-    @Operation(summary = "Actualizar libro parcialmente (PATCH)", description = "Actualiza parcialmente un libro existente usando JSON Merge Patch (RFC 7386)", responses = {
+    @Operation(summary = "Actualizar libro parcialmente", description = "Actualiza parcialmente un libro existente usando JSON Merge Patch (RFC 7386)", responses = {
             @ApiResponse(responseCode = "200", description = "OK - Libro actualizado correctamente"),
             @ApiResponse(responseCode = "400", description = """
                     Bad Request - La petición contiene errores de formato, sintaxis o validación de datos que impiden su procesamiento. Los errores por validación de datos vienen detallados en el atributo 'details' de la respuesta y pueden ser:
@@ -248,7 +248,7 @@ public class BooksController {
     }
 
     @PutMapping("/books/{bookId}")
-    @Operation(summary = "Actualizar libro completamente (PUT)", description = "Actualiza todos los campos de un libro existente", responses = {
+    @Operation(summary = "Actualizar libro completamente", description = "Actualiza todos los campos de un libro existente", responses = {
             @ApiResponse(responseCode = "200", description = "OK - Libro actualizado correctamente"),
             @ApiResponse(responseCode = "400", description = """
                     Bad Request - La petición contiene errores de formato, sintaxis o validación de datos que impiden su procesamiento. Los errores por validación de datos vienen detallados en el atributo 'details' de la respuesta y pueden ser:
