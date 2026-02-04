@@ -3,11 +3,14 @@ package es.unir.dwfs.catalogue.controller;
 import es.unir.dwfs.catalogue.controller.model.BookDto;
 import es.unir.dwfs.catalogue.controller.model.CreateBookRequest;
 import es.unir.dwfs.catalogue.data.model.Book;
+import es.unir.dwfs.catalogue.exception.ConverterErrors;
+import es.unir.dwfs.catalogue.exception.ErrorResponse;
 import es.unir.dwfs.catalogue.service.BooksService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +36,7 @@ import java.util.Map;
 public class BooksController {
 
     private final BooksService service;
+    private final ConverterErrors converterErrors;
 
     @GetMapping("/books")
     @Operation(summary = "Obtener libros", description = "Obtiene todos los libros del catálogo o filtra por criterios de búsqueda combinados (título, autor, categoría, ISBN, rating, precio, visibilidad)", responses = {
@@ -76,7 +81,7 @@ public class BooksController {
                     - **GENERIC-004**: Ha ocurrido un error inesperado. Por favor, contacte al administrador
                     """)
     })
-    public ResponseEntity<Book> getBook(@PathVariable String bookId) {
+    public ResponseEntity<?> getBook(@PathVariable String bookId, HttpServletRequest request) {
 
         log.info("Request to get book with id: {}", bookId);
 
@@ -85,7 +90,14 @@ public class BooksController {
         if (book != null) {
             return ResponseEntity.ok(book);
         } else {
-            return ResponseEntity.notFound().build();
+            ErrorResponse errorResponse = ErrorResponse.builder()
+                    .timestamp(LocalDateTime.now())
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                    .message(converterErrors.getMessage("BOOK-404-001"))
+                    .path(request.getRequestURI())
+                    .build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
     }
 
@@ -99,7 +111,7 @@ public class BooksController {
                     - **GENERIC-004**: Ha ocurrido un error inesperado. Por favor, contacte al administrador
                     """)
     })
-    public ResponseEntity<Void> deleteBook(@PathVariable String bookId) {
+    public ResponseEntity<?> deleteBook(@PathVariable String bookId, HttpServletRequest request) {
 
         log.info("Request to delete book with id: {}", bookId);
 
@@ -108,7 +120,14 @@ public class BooksController {
         if (removed) {
             return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.notFound().build();
+            ErrorResponse errorResponse = ErrorResponse.builder()
+                    .timestamp(LocalDateTime.now())
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                    .message(converterErrors.getMessage("BOOK-404-001"))
+                    .path(request.getRequestURI())
+                    .build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
     }
 
@@ -234,7 +253,8 @@ public class BooksController {
                     - **GENERIC-004**: Ha ocurrido un error inesperado. Por favor, contacte al administrador
                     """)
     })
-    public ResponseEntity<Book> patchBook(@PathVariable String bookId, @RequestBody String patchBody) {
+    public ResponseEntity<?> patchBook(@PathVariable String bookId, @RequestBody String patchBody,
+            HttpServletRequest request) {
 
         log.info("Request to patch book with id: {}", bookId);
 
@@ -243,7 +263,14 @@ public class BooksController {
         if (patchedBook != null) {
             return ResponseEntity.ok(patchedBook);
         } else {
-            return ResponseEntity.badRequest().build();
+            ErrorResponse errorResponse = ErrorResponse.builder()
+                    .timestamp(LocalDateTime.now())
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                    .message(converterErrors.getMessage("BOOK-404-001"))
+                    .path(request.getRequestURI())
+                    .build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
     }
 
@@ -302,7 +329,8 @@ public class BooksController {
                     - **GENERIC-004**: Ha ocurrido un error inesperado. Por favor, contacte al administrador
                     """)
     })
-    public ResponseEntity<Book> updateBook(@PathVariable String bookId, @RequestBody BookDto body) {
+    public ResponseEntity<?> updateBook(@PathVariable String bookId, @RequestBody BookDto body,
+            HttpServletRequest request) {
 
         log.info("Request to update book with id: {}", bookId);
 
@@ -311,7 +339,14 @@ public class BooksController {
         if (updatedBook != null) {
             return ResponseEntity.ok(updatedBook);
         } else {
-            return ResponseEntity.notFound().build();
+            ErrorResponse errorResponse = ErrorResponse.builder()
+                    .timestamp(LocalDateTime.now())
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                    .message(converterErrors.getMessage("BOOK-404-001"))
+                    .path(request.getRequestURI())
+                    .build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
     }
 }
