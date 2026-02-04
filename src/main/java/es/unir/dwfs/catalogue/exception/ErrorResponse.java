@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,7 +17,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorResponse {
+public class ErrorResponse implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Fecha y hora del error
@@ -56,7 +58,8 @@ public class ErrorResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class ErrorDetail {
+    public static class ErrorDetail implements Serializable {
+        private static final long serialVersionUID = 1L;
         /**
          * Campo que falló la validación
          */
