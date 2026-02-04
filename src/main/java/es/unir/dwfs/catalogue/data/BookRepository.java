@@ -72,7 +72,7 @@ public class BookRepository {
                 : null;
 
         SearchStatement isbnSpec = isbn != null
-                ? new SearchStatement(new SearchCriteria("isbn", isbn, SearchOperation.EQUAL))
+                ? new SearchStatement(new SearchCriteria("isbn", isbn, SearchOperation.LIKE))
                 : null;
 
         SearchStatement ratingSpec = rating != null
