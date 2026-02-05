@@ -140,12 +140,10 @@ public class BooksController {
                     **Campo 'title':**
                     - **BOOK-001**: El parámetro 'title' es obligatorio y no puede estar vacío
                     - **BOOK-002**: El parámetro 'title' ha superado el tamaño máximo permitido (max: 200 caracteres)
-                    - **BOOK-003**: El parámetro 'title' tiene un formato no válido
 
                     **Campo 'author':**
                     - **BOOK-010**: El parámetro 'author' es obligatorio y no puede estar vacío
                     - **BOOK-011**: El parámetro 'author' ha superado el tamaño máximo permitido (max: 150 caracteres)
-                    - **BOOK-012**: El parámetro 'author' tiene un formato no válido
 
                     **Campo 'isbn':**
                     - **BOOK-020**: El parámetro 'isbn' ha superado el tamaño máximo permitido (max: 20 caracteres)
@@ -153,7 +151,6 @@ public class BooksController {
 
                     **Campo 'category':**
                     - **BOOK-030**: El parámetro 'category' ha superado el tamaño máximo permitido (max: 100 caracteres)
-                    - **BOOK-031**: El parámetro 'category' tiene un formato no válido
 
                     **Campo 'price':**
                     - **BOOK-040**: El parámetro 'price' es obligatorio y no puede estar vacío
@@ -165,7 +162,6 @@ public class BooksController {
 
                     **Campo 'publicationDate':**
                     - **BOOK-070**: El parámetro 'publicationDate' es obligatorio y no puede estar vacío
-                    - **BOOK-071**: El parámetro 'publicationDate' tiene un formato no válido
                     - **BOOK-072**: El parámetro 'publicationDate' no puede ser una fecha futura
                     """),
             @ApiResponse(responseCode = "409", description = """
@@ -207,12 +203,10 @@ public class BooksController {
                     **Campo 'title':**
                     - **BOOK-001**: El parámetro 'title' es obligatorio y no puede estar vacío
                     - **BOOK-002**: El parámetro 'title' ha superado el tamaño máximo permitido (max: 200 caracteres)
-                    - **BOOK-003**: El parámetro 'title' tiene un formato no válido
 
                     **Campo 'author':**
                     - **BOOK-010**: El parámetro 'author' es obligatorio y no puede estar vacío
                     - **BOOK-011**: El parámetro 'author' ha superado el tamaño máximo permitido (max: 150 caracteres)
-                    - **BOOK-012**: El parámetro 'author' tiene un formato no válido
 
                     **Campo 'isbn':**
                     - **BOOK-020**: El parámetro 'isbn' ha superado el tamaño máximo permitido (max: 20 caracteres)
@@ -220,7 +214,6 @@ public class BooksController {
 
                     **Campo 'category':**
                     - **BOOK-030**: El parámetro 'category' ha superado el tamaño máximo permitido (max: 100 caracteres)
-                    - **BOOK-031**: El parámetro 'category' tiene un formato no válido
 
                     **Campo 'price':**
                     - **BOOK-040**: El parámetro 'price' es obligatorio y no puede estar vacío
@@ -232,7 +225,6 @@ public class BooksController {
 
                     **Campo 'publicationDate':**
                     - **BOOK-070**: El parámetro 'publicationDate' es obligatorio y no puede estar vacío
-                    - **BOOK-071**: El parámetro 'publicationDate' tiene un formato no válido
                     - **BOOK-072**: El parámetro 'publicationDate' no puede ser una fecha futura
                     """),
             @ApiResponse(responseCode = "404", description = "Not Found - No existe un libro con el ID especificado"),
@@ -283,12 +275,10 @@ public class BooksController {
                     **Campo 'title':**
                     - **BOOK-001**: El parámetro 'title' es obligatorio y no puede estar vacío
                     - **BOOK-002**: El parámetro 'title' ha superado el tamaño máximo permitido (max: 200 caracteres)
-                    - **BOOK-003**: El parámetro 'title' tiene un formato no válido
 
                     **Campo 'author':**
                     - **BOOK-010**: El parámetro 'author' es obligatorio y no puede estar vacío
                     - **BOOK-011**: El parámetro 'author' ha superado el tamaño máximo permitido (max: 150 caracteres)
-                    - **BOOK-012**: El parámetro 'author' tiene un formato no válido
 
                     **Campo 'isbn':**
                     - **BOOK-020**: El parámetro 'isbn' ha superado el tamaño máximo permitido (max: 20 caracteres)
@@ -296,7 +286,6 @@ public class BooksController {
 
                     **Campo 'category':**
                     - **BOOK-030**: El parámetro 'category' ha superado el tamaño máximo permitido (max: 100 caracteres)
-                    - **BOOK-031**: El parámetro 'category' tiene un formato no válido
 
                     **Campo 'price':**
                     - **BOOK-040**: El parámetro 'price' es obligatorio y no puede estar vacío
@@ -308,7 +297,6 @@ public class BooksController {
 
                     **Campo 'publicationDate':**
                     - **BOOK-070**: El parámetro 'publicationDate' es obligatorio y no puede estar vacío
-                    - **BOOK-071**: El parámetro 'publicationDate' tiene un formato no válido
                     - **BOOK-072**: El parámetro 'publicationDate' no puede ser una fecha futura
                     """),
             @ApiResponse(responseCode = "404", description = "Not Found - No existe un libro con el ID especificado"),
