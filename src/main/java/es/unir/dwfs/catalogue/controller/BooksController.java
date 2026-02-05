@@ -38,6 +38,8 @@ public class BooksController {
     private final BooksService service;
     private final ConverterErrors converterErrors;
 
+    private static final String BOOK_NOT_FOUND_CODE = "BOOK-404-001";
+
     @GetMapping("/books")
     @Operation(summary = "Obtener libros", description = "Obtiene todos los libros del catálogo o filtra por criterios de búsqueda combinados (título, autor, categoría, ISBN, rating, precio, visibilidad)", responses = {
             @ApiResponse(responseCode = "200", description = "OK - Libros encontrados y devueltos exitosamente"),
@@ -81,7 +83,7 @@ public class BooksController {
                     - **GENERIC-004**: Ha ocurrido un error inesperado. Por favor, contacte al administrador
                     """)
     })
-    public ResponseEntity<?> getBook(@PathVariable String bookId, HttpServletRequest request) {
+    public ResponseEntity<Object> getBook(@PathVariable String bookId, HttpServletRequest request) {
 
         log.info("Request to get book with id: {}", bookId);
 
@@ -94,7 +96,7 @@ public class BooksController {
                     .timestamp(LocalDateTime.now())
                     .status(HttpStatus.NOT_FOUND.value())
                     .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-                    .message(converterErrors.getMessage("BOOK-404-001"))
+                    .message(converterErrors.getMessage(BOOK_NOT_FOUND_CODE))
                     .path(request.getRequestURI())
                     .build();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -111,7 +113,7 @@ public class BooksController {
                     - **GENERIC-004**: Ha ocurrido un error inesperado. Por favor, contacte al administrador
                     """)
     })
-    public ResponseEntity<?> deleteBook(@PathVariable String bookId, HttpServletRequest request) {
+    public ResponseEntity<Object> deleteBook(@PathVariable String bookId, HttpServletRequest request) {
 
         log.info("Request to delete book with id: {}", bookId);
 
@@ -124,7 +126,7 @@ public class BooksController {
                     .timestamp(LocalDateTime.now())
                     .status(HttpStatus.NOT_FOUND.value())
                     .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-                    .message(converterErrors.getMessage("BOOK-404-001"))
+                    .message(converterErrors.getMessage(BOOK_NOT_FOUND_CODE))
                     .path(request.getRequestURI())
                     .build();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -245,7 +247,7 @@ public class BooksController {
                     - **GENERIC-004**: Ha ocurrido un error inesperado. Por favor, contacte al administrador
                     """)
     })
-    public ResponseEntity<?> patchBook(@PathVariable String bookId, @RequestBody String patchBody,
+    public ResponseEntity<Object> patchBook(@PathVariable String bookId, @RequestBody String patchBody,
             HttpServletRequest request) {
 
         log.info("Request to patch book with id: {}", bookId);
@@ -259,7 +261,7 @@ public class BooksController {
                     .timestamp(LocalDateTime.now())
                     .status(HttpStatus.NOT_FOUND.value())
                     .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-                    .message(converterErrors.getMessage("BOOK-404-001"))
+                    .message(converterErrors.getMessage(BOOK_NOT_FOUND_CODE))
                     .path(request.getRequestURI())
                     .build();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -317,7 +319,7 @@ public class BooksController {
                     - **GENERIC-004**: Ha ocurrido un error inesperado. Por favor, contacte al administrador
                     """)
     })
-    public ResponseEntity<?> updateBook(@PathVariable String bookId, @Valid @RequestBody BookDto body,
+    public ResponseEntity<Object> updateBook(@PathVariable String bookId, @Valid @RequestBody BookDto body,
             HttpServletRequest request) {
 
         log.info("Request to update book with id: {}", bookId);
@@ -331,7 +333,7 @@ public class BooksController {
                     .timestamp(LocalDateTime.now())
                     .status(HttpStatus.NOT_FOUND.value())
                     .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-                    .message(converterErrors.getMessage("BOOK-404-001"))
+                    .message(converterErrors.getMessage(BOOK_NOT_FOUND_CODE))
                     .path(request.getRequestURI())
                     .build();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
