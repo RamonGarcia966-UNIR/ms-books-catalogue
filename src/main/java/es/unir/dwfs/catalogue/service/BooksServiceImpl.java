@@ -11,8 +11,6 @@ import es.unir.dwfs.catalogue.data.BookRepository;
 import es.unir.dwfs.catalogue.data.model.Book;
 import es.unir.dwfs.catalogue.exception.BusinessRuleViolationException;
 import es.unir.dwfs.catalogue.exception.ConverterErrors;
-import es.unir.dwfs.catalogue.exception.ErrorResponse;
-import es.unir.dwfs.catalogue.service.BooksService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
