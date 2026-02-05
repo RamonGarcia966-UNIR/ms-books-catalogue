@@ -44,7 +44,7 @@ public class CreateBookRequest {
     private Integer rating;
 
     @NotNull(message = "BOOK-040")
-    @DecimalMin(value = "0.0", message = "BOOK-041")
+    @Positive(message = "BOOK-041")
     @Digits(integer = 10, fraction = 2, message = "BOOK-042")
     private BigDecimal price;
 

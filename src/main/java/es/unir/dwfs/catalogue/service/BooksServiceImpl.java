@@ -9,6 +9,10 @@ import es.unir.dwfs.catalogue.controller.model.BookDto;
 import es.unir.dwfs.catalogue.controller.model.CreateBookRequest;
 import es.unir.dwfs.catalogue.data.BookRepository;
 import es.unir.dwfs.catalogue.data.model.Book;
+import es.unir.dwfs.catalogue.exception.BusinessRuleViolationException;
+import es.unir.dwfs.catalogue.exception.ConverterErrors;
+import es.unir.dwfs.catalogue.exception.ErrorResponse;
+import es.unir.dwfs.catalogue.service.BooksService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +32,7 @@ public class BooksServiceImpl implements BooksService {
 
     private final BookRepository repository;
     private final ObjectMapper objectMapper;
+    private final ConverterErrors converterErrors;
 
     @Override
     public List<Book> getBooks(String title, String author, LocalDate publicationDate,
@@ -78,6 +83,9 @@ public class BooksServiceImpl implements BooksService {
                     .visible(request.getVisible())
                     .build();
 
+            // Validación de precio
+            validatePrice(book.getPrice());
+
             return repository.save(book);
         } else {
             return null;
@@ -95,6 +103,10 @@ public class BooksServiceImpl implements BooksService {
                 JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(patchBody));
                 JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(book)));
                 Book patched = objectMapper.treeToValue(target, Book.class);
+
+                // Validación manual post-patch
+                validatePrice(patched.getPrice());
+
                 return repository.save(patched);
             } catch (JsonProcessingException | JsonPatchException e) {
                 log.error("Error updating book {}", bookId, e);
@@ -110,9 +122,27 @@ public class BooksServiceImpl implements BooksService {
         Book book = repository.getById(Long.valueOf(bookId));
         if (book != null) {
             book.update(updateRequest);
+
+            // Validación manual post-update
+            validatePrice(book.getPrice());
+
             return repository.save(book);
         } else {
             return null;
+        }
+    }
+
+    /**
+     * Valida que el precio sea mayor que 0
+     */
+    private void validatePrice(BigDecimal price) {
+        log.info("Validating price: {}", price);
+        if (price != null && price.compareTo(BigDecimal.ZERO) <= 0) {
+            log.error("Price validation failed for value: {}", price);
+            throw new BusinessRuleViolationException(
+                    "Error de validación de negocio",
+                    "BOOK-041",
+                    converterErrors.getMessage("BOOK-041"));
         }
     }
 
