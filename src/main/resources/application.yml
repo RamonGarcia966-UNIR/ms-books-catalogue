@@ -33,3 +33,17 @@ eureka:
   instance:
     preferIpAddress: true
     hostname: ms-books-catalogue
+
+## Configuración de SpringDoc OpenAPI
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+    display-request-duration: true
+    show-extensions: true
+    show-common-extensions: true
